@@ -184,7 +184,7 @@ function App() {
     legend:{ enabled:false },
     tooltip: {
       useHTML: true,
-      pointFormat: '<b>{point.name}:</b> {point.value} games'
+      pointFormat: '<b>{point.name}:</b> {point.value} ' + '{#if (eq 1 point.value)}game{else}games{/if}'
   },
   plotOptions: {
       packedbubble: {
@@ -201,7 +201,7 @@ function App() {
                   color: 'white',
                   textOutline: 'none',
                   fontWeight: 'normal',
-                  fontSize: "1.5rem"
+                  fontSize: "1rem"
               }
           }
       }
