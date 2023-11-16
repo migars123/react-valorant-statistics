@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import highchartsMore from 'highcharts/highcharts-more';
+highchartsMore(Highcharts);
 import './App.css'
 
 function arrayMin(arr: number[]) { return Math.min.apply(Math, arr); };
@@ -20,6 +22,20 @@ type DataPoint = {
 
 function App() {
 
+  const agentsAPI = useRef<any>([]);
+
+   useEffect(() => {
+      fetch('https://valorant-api.com/v1/agents')
+         .then((res) => res.json())
+         .then((data) => {
+            console.log(data);
+            agentsAPI.current = data;
+         })
+         .catch((err) => {
+            console.log(err.message);
+         });
+   }, []);
+
   const dateOptions: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: '2-digit',
@@ -27,13 +43,50 @@ function App() {
     hour: '2-digit',
     minute: '2-digit'
   };
-  
+  const [agentData, setAgentData] = useState([{
+    name: 'Duelist',
+    data: [{
+      name: 'Jett',
+      value: 4
+    }, {
+      
+    }, {
+      name: 'Reyna',
+      value: 2
+    }, {
+      name: 'Iso',
+      value: 1
+    }]
+  }, {
+    name: 'Controller',
+    data: [{
+      name: 'Omen',
+      value: 3
+    }, {
+      
+    }, {
+      name: 'Astra',
+      value: 2,
+    }]
+  }, {
+    name: 'Initiator',
+    data: [{
+      name: 'Skye',
+      value: 5
+    }, {
+      
+    }, {
+      name: 'Breach',
+      value: 3
+    }]
+  }]);
+
   const [input, setInput] = useState([{y:27.3, date:"03/11/23, 19:29"}, {y:30.2, date:"06/11/23, 22:20"}, {y:31, date:"08/11/23, 21:40"}, {y:32.2, date:"08/11/23, 22:32"}, {y:21.2, date:"08/11/23, 23:03"}]);
 
-  const options: Highcharts.Options = {
+  const areaOptions: Highcharts.Options = {
     title: {
         text: 'AVG HS%',
-        align: 'left',
+        align: 'center',
         style: {
           color: '#ffffff',
           fontSize: "3em"
@@ -106,42 +159,117 @@ function App() {
     }]
   };
 
+  const bubbleOptions: Highcharts.Options = {
+    title: {
+        text: 'Played Agents',
+        align: 'center',
+        style: {
+          color: '#ffffff',
+          fontSize: "3em"
+        },
+    },
+    chart: {
+      type: 'packedbubble',
+      height: '100%',
+      backgroundColor:'transparent',
+    },
+    credits: { enabled: false },
+    legend:{ enabled:false },
+    tooltip: {
+      useHTML: true,
+      pointFormat: '<b>{point.name}:</b> {point.value} games'
+  },
+  plotOptions: {
+      packedbubble: {
+          minSize: '30%',
+          maxSize: '120%',
+          layoutAlgorithm: {
+              splitSeries: false,
+              gravitationalConstant: 0.02
+          },
+          dataLabels: {
+              enabled: true,
+              format: '{point.name}',
+              style: {
+                  color: 'white',
+                  textOutline: 'none',
+                  fontWeight: 'normal',
+                  fontSize: "1.5rem"
+              }
+          }
+      }
+    },
+    series: agentData
+  };
+
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
+  function applyAgentData(playedAgents: string[]){
+
+    let newAgents: {
+        name: string;
+        data: ({
+            name: string;
+            value: number;
+        })[];
+    }[] = [];
+
+    playedAgents.forEach((agent) => {
+      let agentInfo = agentsAPI.current.data.find((currAgentInfo: any) => currAgentInfo.displayName.toLocaleLowerCase() == agent.toLocaleLowerCase());
+
+      if(!newAgents.find(index => index.name == agentInfo.role.displayName)){
+        newAgents.push({
+          name: agentInfo.role.displayName,
+          data: []
+        })
+      }
+      if(!newAgents.find(index => index.name == agentInfo.role.displayName)?.data.find(currAgent => currAgent.name == agentInfo.displayName)){
+        newAgents.find(index => index.name == agentInfo.role.displayName)?.data.push({
+          name: agentInfo.displayName,
+          value: 0
+        })
+      }
+
+      newAgents.find(index => index.name == agentInfo.role.displayName)!.data.find(currAgent => currAgent.name == agentInfo.displayName)!.value++
+
+    })
+    setAgentData(newAgents);
+  }
+
   const onSearch = (input: string) => {
+    console.log("searching...")
     const username = input.split('#')[0];
     const tag = input.split('#')[1];
-    fetch(`https://api.henrikdev.xyz/valorant/v1/account/${username}/${tag}`)
-         .then((res) => res.json())
-         .then((res) => {
-            return res.data.puuid;
-         })
-         .then((puuid) => {
 
-          fetch(`https://api.henrikdev.xyz/valorant/v3/by-puuid/matches/eu/${puuid}?size=10&mode=competitive`)
-            .then((res) => res.json())
-            .then((res) => {
-              
-              let matchData: DataPoint[] = [];
-              res.data.forEach((match: any) => {
-                let player = match.players.all_players.find((player: any) => player.puuid == puuid);
-                
-                let totalshots = player.stats.bodyshots + player.stats.headshots + player.stats.legshots;
-                let headshotRate = player.stats.headshots/totalshots*100;
+    fetch(`https://valorantstatsapi.migars.repl.co/stats/${username}/${tag}`)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        let matchData: DataPoint[] = [];
+        let playedAgents: string[] = [];
+        res.data.forEach((match: any) => {
+          console.log("looping through matches...");
+          let player = match.players.all_players.find((player: any) => player.name.toLocaleLowerCase() == username.toLocaleLowerCase() && player.tag.toLocaleLowerCase() == tag.toLocaleLowerCase());
+          
+          
+          let totalshots = player.stats.bodyshots + player.stats.headshots + player.stats.legshots;
+          let headshotRate = player.stats.headshots/totalshots*100;
 
-                let date = new Date(match.metadata.game_start * 1000);
-                let dateString = date.toLocaleDateString("en-GB", dateOptions);
+          let date = new Date(match.metadata.game_start * 1000);
+          let dateString = date.toLocaleDateString("en-GB", dateOptions);
 
-                matchData.push({y:+headshotRate.toFixed(1), date:dateString});
-              });
-              matchData = matchData.reverse();
-              setInput(matchData)
-            })
-
-         })
-         .catch((err) => {
-            console.log(err.message);
-         });
+          matchData.push({y:+headshotRate.toFixed(1), date:dateString});
+          playedAgents.push(player.character);
+        });
+        
+        console.log("setting graph");
+        applyAgentData(playedAgents)
+        matchData = matchData.reverse();
+        setInput(matchData)
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   return (
@@ -173,8 +301,12 @@ function App() {
       </div>
       <HighchartsReact
         highcharts={Highcharts}
-        options={options}
+        options={areaOptions}
         ref={chartComponentRef}
+      />
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={bubbleOptions}
       />
     </>
   );

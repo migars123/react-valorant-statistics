@@ -4,6 +4,11 @@
   max-width: 1280px;
   margin: auto auto;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
 }
 
 *{
@@ -11,10 +16,7 @@
 }
 
 #search-box{
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 70px 0;
 
   width: 500px;
   height: 60px;
@@ -42,8 +44,8 @@ input:focus{
 }
 
 #search-box i{
-  position: absolute;
-  right: 20px;
+  position: relative;
+  right: -10px;
   cursor: pointer;
   color: white;
   width: 40px;
