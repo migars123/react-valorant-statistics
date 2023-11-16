@@ -19,6 +19,13 @@ type DataPoint = {
   y: number;
   date: string;
 };
+type PackedBubbleData = {
+  name: string;
+  data: ({
+      name: string;
+      value: number;
+  })[];
+}[];
 
 function App() {
 
@@ -199,20 +206,14 @@ function App() {
           }
       }
     },
-    series: agentData
+    series: agentData as any
   };
 
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
   function applyAgentData(playedAgents: string[]){
 
-    let newAgents: {
-        name: string;
-        data: ({
-            name: string;
-            value: number;
-        })[];
-    }[] = [];
+    let newAgents: PackedBubbleData = [];
 
     playedAgents.forEach((agent) => {
       let agentInfo = agentsAPI.current.data.find((currAgentInfo: any) => currAgentInfo.displayName.toLocaleLowerCase() == agent.toLocaleLowerCase());
