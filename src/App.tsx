@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
+import MatchHistory from './MatchHistory';
+
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import highchartsMore from 'highcharts/highcharts-more';
@@ -344,6 +346,8 @@ function App() {
       <HighchartsReact
         highcharts={Highcharts}
         options={bubbleOptions}
+      />
+      <MatchHistory
       />
     </>
   );

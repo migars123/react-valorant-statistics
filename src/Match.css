@@ -1,0 +1,130 @@
+.match{
+    width: 100%;
+    background-color: #1b2733;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+}
+
+.matchAgentImg {
+    border-radius: 0.25rem;
+}
+
+.match::before{
+    content: '';
+    background-color: #5ee790;
+    width: 5px;
+    position: absolute;
+    left: 0;
+    border-radius: 0 .25rem .25rem 0;
+    bottom: 1rem;
+    top: 1rem;
+}
+
+.matchLeft, .matchRight{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    
+    gap: 1rem;
+}
+
+.matchAgentImg{
+    width: 3rem;
+    height: 3rem;
+}
+
+.topDownText{
+    min-width: 10rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.topDownText p{
+    margin: 0;
+    width: 100%;
+    font-weight: 500;
+}
+
+.matchLeft{
+    padding-left: 1.5rem;
+    text-align: left;
+    background: linear-gradient(90deg,rgba(94, 231, 144, 0.25) 0%,transparent 7.5rem);
+}
+.matchRight{
+    padding-right: 1.5rem;
+    text-align: right;
+    justify-content: end;
+}
+
+.topDownText p:first-child{
+    font-size: .875rem;
+    color: #99ABBF;
+}
+
+.topDownText p:last-child{
+    font-size: 1.125rem;
+    color: #efefef;
+}
+
+.matchRankImg{
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.matchScore{
+    text-align: center;
+    min-width: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.matchScore p{
+    text-align: unset;
+    font-size: 500;
+}
+
+.matchScore p:first-child{
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.matchScore p:first-child span:first-child{
+    color: #5ee790;
+}
+.matchScore p:first-child span:last-child{
+    color: #e4485d;
+}
+
+.matchScore p:last-child{
+    width: 3rem;
+    font-weight: 700;
+    text-align: center;
+    color: black;
+    font-size: 0.75rem;
+    border-radius: .625rem;
+    padding: .25rem .5rem;
+    box-sizing: border-box;
+    text-overflow: clip;
+    line-height: .75rem;
+}
+
+.bg-gold{
+    background-color: #cbb765;
+}
+
+.matchRight .topDownText:first-child{
+    min-width: 6rem;
+}
+.matchRight .topDownText{
+    min-width: 3rem;
+}
+
+.topDownText .positive{
+    color: #5ee790 !important;
+}
