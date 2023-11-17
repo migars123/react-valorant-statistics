@@ -11,6 +11,20 @@ import './App.css'
 
 function arrayMin(arr: number[]) { return Math.min.apply(Math, arr); };
 function arrayMax(arr: number[]) { return Math.max.apply(Math, arr); };
+function roleColor(role: string){
+  switch(role){
+    case "Duelist":
+      return "#0fdbd8";
+    case "Controller":
+      return "#4638c7";
+    case "Sentinel":
+      return "#d1a815";
+    case "Initiator":
+      return "#67d611";
+    default:
+      return "#ffffff";
+  }
+}
 
 interface CustomPoint extends Highcharts.PointOptionsObject {
   date: string;
@@ -21,6 +35,10 @@ type DataPoint = {
 };
 type PackedBubbleData = {
   name: string;
+  color: string,
+  marker: {
+    fillColor: string
+  },
   data: ({
       name: string;
       value: number;
@@ -32,7 +50,7 @@ function App() {
   const agentsAPI = useRef<any>([]);
 
    useEffect(() => {
-      fetch('https://valorant-api.com/v1/agents')
+      fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true')
          .then((res) => res.json())
          .then((data) => {
             console.log(data);
@@ -52,6 +70,10 @@ function App() {
   };
   const [agentData, setAgentData] = useState([{
     name: 'Duelist',
+    color: "#0fdbd8",
+    marker: {
+      fillColor: "#0fdbd8"
+    },
     data: [{
       name: 'Jett',
       value: 4
@@ -66,6 +88,10 @@ function App() {
     }]
   }, {
     name: 'Controller',
+    color: "#4638c7",
+    marker: {
+      fillColor: "#4638c7"
+    },
     data: [{
       name: 'Omen',
       value: 3
@@ -77,6 +103,10 @@ function App() {
     }]
   }, {
     name: 'Initiator',
+    color: "#67d611",
+    marker: {
+      fillColor: "#67d611"
+    },
     data: [{
       name: 'Skye',
       value: 5
@@ -217,10 +247,14 @@ function App() {
 
     playedAgents.forEach((agent) => {
       let agentInfo = agentsAPI.current.data.find((currAgentInfo: any) => currAgentInfo.displayName.toLocaleLowerCase() == agent.toLocaleLowerCase());
-
       if(!newAgents.find(index => index.name == agentInfo.role.displayName)){
+        let color = roleColor(agentInfo.role.displayName);
         newAgents.push({
           name: agentInfo.role.displayName,
+          color: color,
+          marker: {
+            fillColor: color
+          },
           data: []
         })
       }
@@ -238,19 +272,21 @@ function App() {
   }
 
   const onSearch = (input: string) => {
-    console.log("searching...")
+    
     const username = input.split('#')[0];
     const tag = input.split('#')[1];
-
+    console.log("searching...")
     fetch(`https://valorantstatsapi.migars.repl.co/stats/${username}/${tag}`)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
         let matchData: DataPoint[] = [];
         let playedAgents: string[] = [];
+        let uuid = res.data[0].players.all_players.find((player: any) => player.name.toLocaleLowerCase() == username.toLocaleLowerCase() && player.tag.toLocaleLowerCase() == tag.toLocaleLowerCase()).puuid;
+        console.log(uuid);
         res.data.forEach((match: any) => {
           console.log("looping through matches...");
-          let player = match.players.all_players.find((player: any) => player.name.toLocaleLowerCase() == username.toLocaleLowerCase() && player.tag.toLocaleLowerCase() == tag.toLocaleLowerCase());
+          let player = match.players.all_players.find((player: any) => player.puuid == uuid);
           
           
           let totalshots = player.stats.bodyshots + player.stats.headshots + player.stats.legshots;
