@@ -5,6 +5,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 import MatchHistory from './MatchHistory';
 
+import * as Types  from './Types';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import highchartsMore from 'highcharts/highcharts-more';
@@ -121,6 +122,9 @@ function App() {
   }]);
 
   const [input, setInput] = useState([{y:27.3, date:"03/11/23, 19:29"}, {y:30.2, date:"06/11/23, 22:20"}, {y:31, date:"08/11/23, 21:40"}, {y:32.2, date:"08/11/23, 22:32"}, {y:21.2, date:"08/11/23, 23:03"}]);
+
+  const [matches, setMatches] = useState([] as Types.Data[]);
+  const [puuid, setPuuid] = useState("");
 
   const areaOptions: Highcharts.Options = {
     title: {
@@ -280,11 +284,11 @@ function App() {
     console.log("searching...")
     fetch(`https://valorantstatsapi.migars.repl.co/stats/${username}/${tag}`)
       .then((res) => res.json())
-      .then((res) => {
+      .then((res: Types.Response) => {
         console.log(res);
         let matchData: DataPoint[] = [];
         let playedAgents: string[] = [];
-        let uuid = res.data[0].players.all_players.find((player: any) => player.name.toLocaleLowerCase() == username.toLocaleLowerCase() && player.tag.toLocaleLowerCase() == tag.toLocaleLowerCase()).puuid;
+        let uuid = res.data[0].players.all_players.find((player: any) => player.name.toLocaleLowerCase() == username.toLocaleLowerCase() && player.tag.toLocaleLowerCase() == tag.toLocaleLowerCase())!.puuid;
         console.log(uuid);
         res.data.forEach((match: any) => {
           console.log("looping through matches...");
@@ -302,6 +306,8 @@ function App() {
         });
         
         console.log("setting graph");
+        setPuuid(uuid);
+        setMatches(res.data);
         applyAgentData(playedAgents)
         matchData = matchData.reverse();
         setInput(matchData)
@@ -348,6 +354,8 @@ function App() {
         options={bubbleOptions}
       />
       <MatchHistory
+        matches={matches}
+        puuid={puuid}
       />
     </>
   );

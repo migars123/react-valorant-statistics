@@ -12,13 +12,19 @@
 
 .match::before{
     content: '';
-    background-color: #5ee790;
     width: 5px;
     position: absolute;
     left: 0;
     border-radius: 0 .25rem .25rem 0;
     bottom: 1rem;
     top: 1rem;
+}
+
+.matchVictory::before{
+    background-color: #5ee790;
+}
+.matchLoss::before{
+    background-color: #e4485d;
 }
 
 .matchLeft, .matchRight{
@@ -50,8 +56,13 @@
 .matchLeft{
     padding-left: 1.5rem;
     text-align: left;
+    
+}
+
+.matchLeftVictory{
     background: linear-gradient(90deg,rgba(94, 231, 144, 0.25) 0%,transparent 7.5rem);
 }
+
 .matchRight{
     padding-right: 1.5rem;
     text-align: right;
@@ -117,6 +128,16 @@
 .bg-gold{
     background-color: #cbb765;
 }
+.bg-silver{
+    background-color: #8e91a7;
+}
+.bg-bronze{
+    background-color: #a86243;
+}
+.bg-none{
+    background-color: #2c3f52;
+    color: #99ABBF !important;
+}
 
 .matchRight .topDownText:first-child{
     min-width: 6rem;
@@ -127,4 +148,12 @@
 
 .topDownText .positive{
     color: #5ee790 !important;
+}
+
+.topDownText .positive::before{
+    content: "+";
+}
+
+.topDownText .negative{
+    color: #e4485d !important;
 }
