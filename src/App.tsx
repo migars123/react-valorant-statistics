@@ -282,7 +282,7 @@ function App() {
     const username = input.split('#')[0];
     const tag = input.split('#')[1];
     console.log("searching...")
-    fetch(`https://valorantstatsapi.migars.repl.co/stats/${username}/${tag}`)
+    fetch(`https://1e946ec0-7a72-4dd9-8520-5e14de8cee9d-00-1zfonthowlb18.riker.replit.dev//stats/${username}/${tag}`)
       .then((res) => res.json())
       .then((res: Types.Response) => {
         console.log(res);
