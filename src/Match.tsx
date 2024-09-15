@@ -17,6 +17,7 @@ interface props{
     matchScore: number;
     matchAgentImage: string;
     matchRankImage: string;
+    onClick?: () => void;
 }
 
 const timestampAgo = (timestamp: number) => {
@@ -50,7 +51,7 @@ const timestampAgo = (timestamp: number) => {
 
 //https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number
 function ordinal_suffix_of(i: number) {
-    var j = i % 10,
+    const j = i % 10,
         k = i % 100;
     if (j == 1 && k != 11) {
         return i + "st";
@@ -79,7 +80,7 @@ function classNameBadge(place: number){
 
 const Match = (props: props) => {
   return (
-    <div className={"match" + (props.matchFriendlyScore > props.matchEnemyScore ? " matchVictory": " matchLoss")}>
+    <div className={"match" + (props.matchFriendlyScore > props.matchEnemyScore ? " matchVictory": " matchLoss")} onClick={props.onClick}>
         <div className={"matchLeft" + (props.matchFriendlyScore > props.matchEnemyScore ? " matchLeftVictory": "")}>
             <img src={props.matchAgentImage} alt="" className="matchAgentImg"/>
             <div className="topDownText modeNmap">

@@ -1,0 +1,109 @@
+.matchDetailsRoot{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.hiddenMatchDetails {
+    height: 0;
+    overflow: hidden;
+}
+
+.hiddenMatchDetails .matchDetailsMainContainer{
+    height: 0px;
+}
+
+.matchDetailsMainContainer{
+    background-color: #2c3f52;
+    height: 840px;
+    max-width: 1400px;
+    width: min(100vw - 2rem,1400px);
+    transition: height 0.1s;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.matchDetailsHeader{
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem 1rem;
+    min-height: 3.5rem;
+    box-sizing: border-box;
+}
+.matchDetailsHeaderLeft, .matchDetailsHeaderRight{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.matchDetailsHeaderScore{
+    display: flex;
+    line-height: 1;
+}
+
+.matchDetailsHeaderScore .topDownText{
+    min-width: 2rem;
+}
+
+.winColored p{
+    color: #16e5b4 !important;
+}
+.loseColored p{
+    color: #ff4655 !important;
+}
+
+.topDownTextCentered{
+    text-align: center !important;
+}
+
+.matchDetailsHeaderLeft .topDownText{
+    text-align: left;
+    line-height: 1;
+    gap: .125rem;
+}
+
+.matchDetailsHeader .topDownText p:first-child{
+    font-size: .75rem;
+}
+
+.matchDetailsHeader .topDownText p:last-child{
+    font-size: 1.125rem;
+}
+
+.matchDetailsHeaderGamemode{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.topDownText span{
+    align-self: center;
+}
+
+.topDownTextAutoSize{
+    min-width: auto !important;
+}
+
+.imageText{
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+.closeMatchDetailsButtonIcon{
+    height: 24px;
+    width: 24px;
+}
+.closeMatchDetailsButton{
+    display: flex;
+    align-items: center;
+    padding: .625rem 1rem;
+    cursor: pointer;
+}

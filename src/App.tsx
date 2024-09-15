@@ -282,7 +282,7 @@ function App() {
     const username = input.split('#')[0];
     const tag = input.split('#')[1];
     console.log("searching...")
-    fetch(`https://1e946ec0-7a72-4dd9-8520-5e14de8cee9d-00-1zfonthowlb18.riker.replit.dev//stats/${username}/${tag}`)
+    fetch(`https://1e946ec0-7a72-4dd9-8520-5e14de8cee9d-00-1zfonthowlb18.riker.replit.dev:5173/stats/${username}/${tag}`)
       .then((res) => res.json())
       .then((res: Types.Response) => {
         console.log(res);
@@ -292,22 +292,24 @@ function App() {
         console.log(uuid);
         res.data.forEach((match: any) => {
           console.log("looping through matches...");
-          let player = match.players.all_players.find((player: any) => player.puuid == uuid);
-          
-          
-          let totalshots = player.stats.bodyshots + player.stats.headshots + player.stats.legshots;
-          let headshotRate = player.stats.headshots/totalshots*100;
+          if(match.is_available){
+            let player = match.players.all_players.find((player: any) => player.puuid == uuid);
+            
+            
+            let totalshots = player.stats.bodyshots + player.stats.headshots + player.stats.legshots;
+            let headshotRate = player.stats.headshots/totalshots*100;
 
-          let date = new Date(match.metadata.game_start * 1000);
-          let dateString = date.toLocaleDateString("en-GB", dateOptions);
+            let date = new Date(match.metadata.game_start * 1000);
+            let dateString = date.toLocaleDateString("en-GB", dateOptions);
 
-          matchData.push({y:+headshotRate.toFixed(1), date:dateString});
-          playedAgents.push(player.character);
+            matchData.push({y:+headshotRate.toFixed(1), date:dateString});
+            playedAgents.push(player.character);
+          }
         });
         
         console.log("setting graph");
         setPuuid(uuid);
-        setMatches(res.data);
+        setMatches(res.data.filter((match: any) => match.is_available));
         applyAgentData(playedAgents)
         matchData = matchData.reverse();
         setInput(matchData)
